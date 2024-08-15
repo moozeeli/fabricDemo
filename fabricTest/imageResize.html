@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabric.js Drag Container Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
+  </head>
+  <body>
+    <canvas
+      id="c"
+      width="1000"
+      height="1000"
+      style="border: 1px solid #ccc"
+    ></canvas>
+    <script >
+      const canvas = new fabric.Canvas("c",{
+        uniformScaling:false
+      });
+      // fabric.Object.prototype.originX = "center";
+      // fabric.Object.prototype.originY = "center";
+
+      canvas.add(new fabric.Rect({
+        left: 300,
+        top: 300,
+        width: 300,
+        height: 300,
+        fill: "rgba(0,0,0,0)", // 透明背景
+        stroke: "gray", // 边框颜色
+        strokeWidth: 1,
+        lockUniScaling: false,
+        lockScalingFlip: true,
+        selectable:false,
+
+      }));
+      
+      const frameRect = new fabric.Rect({
+        left: 300,
+        top: 300,
+        width: 300,
+        height: 100,
+        fill: "rgba(0,0,0,0)", // 透明背景
+        stroke: "red", // 边框颜色
+        strokeWidth: 1,
+        lockUniScaling: false,
+        lockScalingFlip: true,
+        strokeUniform: true,
+
+        // objectCaching: false,
+      });
+
+
+      const container = new fabric.Group([frameRect],{
+        originX: 'center',
+        originY: 'center'
+      });
+      
+      canvas.add(container);
+
+      // 创建图像
+      fabric.Image.fromURL(
+        "https://craftypixels.com/placeholder-image/800x800/bd0000/000000&text=800",
+        function (img800) {
+          let rate1  = container.height / img800.height ;
+          let rate2 = container.width / img800.width;
+          let rate = rate1 < rate2 ? rate1 : rate2;
+          img800.set({
+            left: container.left,
+            top: container.top,
+            // left:container.left - (img800.width*rate)/2,
+            // top:container.top  - (img800.height*rate)/2,
+            // height:container.height,
+            // width:container.width,
+            originX: 'center',
+            originY: 'center',
+            scaleX: rate,
+            scaleY: rate,
+            // width:container.width,
+            // height:container.height,
+          });
+
+        
+          // 添加图像和容器到画布
+          container.addWithUpdate(img800);
+          window.img800 = img800;
+
+          canvas.renderAll();
+        }
+      );
+
+        // "mousedown",
+        container.on("scaling", (e) => {
+          console.log("scaling e ",e,)
+          // let rate1  = container.getBoundingRect().height / img800.height ;
+          // let rate2 = container.getBoundingRect().width / img800.width;
+          let rate1  = container.scaleY * img800.scaleY;
+          let rate2 = container.getScaledWidth() / container.width;
+          console.log("img800.getBoundingRect(true,true).height",img800.getBoundingRect(true,true).height)
+          let rate = rate1 < rate2 ? rate1 : rate2;
+          console.log('rate1',rate1)
+          img800.set({
+            
+            // scaleX: rate,
+            scaleY: rate1,
+            // scaleX: rate,
+            // scaleY: rate2,
+          });
+          canvas.renderAll();
+        });
+      canvas.setActiveObject(container);
+    </script>
+  </body>
+</html>

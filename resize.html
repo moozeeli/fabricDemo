@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <script>
+    var canvas = new fabric.Canvas('c');
+
+    // 创建一个矩形对象
+    var rect = new fabric.Rect({
+      left: 100,
+      top: 100,
+      width: 100,
+      height: 100,
+      fill: 'red'
+    });
+
+    // 添加矩形到画布
+    canvas.add(rect);
+
+    // 设置画布大小为窗口大小
+    function resizeCanvas() {
+      var containerWidth = window.innerWidth;
+      var containerHeight = window.innerHeight;
+
+      canvas.setWidth(containerWidth);
+      canvas.setHeight(containerHeight);
+
+      // 调整缩放比例以适应画布内容
+      // canvas.calcOffset();
+      canvas.renderAll();
+    }
+
+    // 初始化画布大小
+    resizeCanvas();
+
+    // 在窗口大小改变时调整画布大小
+    window.addEventListener('resize', resizeCanvas);
+  </script>
+</body>
+</html>

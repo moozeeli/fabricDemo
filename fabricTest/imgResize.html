@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabric.js Drag Container Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
+  </head>
+  <body>
+    <canvas
+      id="c"
+      width="800"
+      height="600"
+      style="border: 1px solid #ccc"
+    ></canvas>
+    <script>
+      const canvas = new fabric.Canvas("c", {
+        uniformScaling: false,
+      });
+      fabric.Object.prototype.originX = "center";
+      fabric.Object.prototype.originY = "center";
+
+      const frameRect = new fabric.Rect({
+        left: 0,
+        top: 0,
+        width: 300,
+        height: 100,
+        fill: "rgba(0,0,0,0)", // 透明背景
+        stroke: "gray", // 边框颜色
+        strokeWidth: 1,
+        lockUniScaling: false,
+        lockScalingFlip: true,
+      });
+
+      const container = new fabric.Group([frameRect], {
+        left: 300,
+        top: 300,
+        $_type: "dynamic-image",
+        uniformScaling: false,
+        $_isTemplateElement: true,
+      });
+
+      canvas.add(container);
+
+      // 创建图像
+      fabric.Image.fromURL(
+        "https://craftypixels.com/placeholder-image/800x800/bd0000/000000&text=800",
+        function (img800) {
+          // 初始化图片比例
+          fitImageInContainer(img800, container);
+
+          container.add(img800);
+          canvas.renderAll();
+          
+          // 监听group的缩放事件
+          container.on("scaling", (e) => {
+            fitImageInContainer(img800, container);
+            canvas.renderAll();
+          });
+        }
+      );
+
+      // 使图像适应容器大小，并实现类似object-fit: contain的效果
+      function fitImageInContainer(image, container) {
+        const containerWidth = container.getScaledWidth();
+        const containerHeight = container.getScaledHeight();
+
+        const imgAspectRatio = image.width / image.height;
+        const containerAspectRatio = containerWidth / containerHeight;
+
+        let scaleFactor;
+        if (imgAspectRatio > containerAspectRatio) {
+          scaleFactor = containerWidth / image.width;
+        } else {
+          scaleFactor = containerHeight / image.height;
+        }
+
+        image.set({
+          scaleX: scaleFactor,
+          scaleY: scaleFactor,
+          left: 0,
+          top: 0,
+        });
+
+        // 中心对齐图片
+        image.set({
+          left: (containerWidth - image.width * scaleFactor) / 2,
+          top: (containerHeight - image.height * scaleFactor) / 2,
+        });
+      }
+    </script>
+  </body>
+</html>

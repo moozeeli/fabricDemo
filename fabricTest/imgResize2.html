@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabric.js Drag Container Example</title>
+    <script src="./assets/fabric.js"></script>
+  </head>
+  <body>
+    <canvas
+      id="c"
+      width="800"
+      height="600"
+      style="border: 1px solid #ccc"
+    ></canvas>
+    <script >
+      const canvas = new fabric.Canvas("c",{
+        uniformScaling:false
+      });
+      fabric.Object.prototype.originX = "center";
+      fabric.Object.prototype.originY = "center";
+
+      const frameRect = new fabric.Rect({
+        left: 300,
+        top: 300,
+        width: 300,
+        height: 100,
+        fill: "rgba(0,0,0,0)", // 透明背景
+        stroke: "gray", // 边框颜色
+        strokeWidth: 1,
+        lockUniScaling: false,
+        lockScalingFlip: true,
+      });
+
+
+      const container = new fabric.Group([frameRect], {
+        $_type: "dynamic-image",
+        uniformScaling:false,
+        $_isTemplateElement: true,
+        // lockUniScaling: false,
+      });
+      
+      canvas.add(container);
+
+      // 创建图像
+      fabric.Image.fromURL(
+        "https://craftypixels.com/placeholder-image/800x800/bd0000/000000&text=800",
+        function (img800) {
+          console.log(img800);
+          let rate1  = container.height / img800.height ;
+          let rate2 = container.width / img800.width;
+          let rate = rate1 < rate2 ? rate1 : rate2;
+          img800.set({
+            left:0,
+            top:0,
+            scaleX: rate,
+            // scaleY: rate,
+            // transformMatrix:null
+          });
+          // img.transformMatrix = null
+          container.add(img800);
+          window.img800 = img800;
+          // canvas.renderAll();
+        }
+      );
+
+        // "mousedown",
+        container.on("scaling", (e) => {
+          let rate1 = container.getBoundingRect().height / img800.height;
+          let rate2 = container.getBoundingRect().width / img800.width;
+          let rate = rate1 < rate2 ? rate1 : rate2;
+          
+          img800.set({
+            scaleX: rate,
+            scaleY: rate,
+          });
+
+
+          canvas.renderAll();
+        });
+
+      canvas.setActiveObject(container);
+    </script>
+  </body>
+</html>

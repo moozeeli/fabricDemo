@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="c"></canvas>
+  </div>
+
+  <script>
+    var canvas = new fabric.Canvas('c');
+
+    // 初始设置
+    function setCanvasSize() {
+      var container = document.getElementById('canvas-container');
+      canvas.setWidth(container.clientWidth);
+      canvas.setHeight(container.clientHeight);
+    }
+
+    function scaleCanvasContent() {
+      var container = document.getElementById('canvas-container');
+      var scaleX = container.clientWidth / canvas.getWidth();
+      var scaleY = container.clientHeight / canvas.getHeight();
+      canvas.viewportTransform = fabric.util.multiplyTransformMatrices(
+        canvas.viewportTransform, 
+        fabric.util.createMatrix().scale(scaleX, scaleY)
+      );
+      canvas.renderAll();
+    }
+
+    // 添加一些内容到画布
+    var rect = new fabric.Rect({
+      left: 100,
+      top: 100,
+      fill: 'red',
+      width: 200,
+      height: 200
+    });
+    canvas.add(rect);
+
+    setCanvasSize();
+    scaleCanvasContent();
+
+    // 监听窗口调整事件
+    window.addEventListener('resize', function() {
+      setCanvasSize();
+      scaleCanvasContent();
+    });
+  </script>
+</body>
+</html>

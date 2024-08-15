@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
+</head>
+<body>
+  <canvas id="c" width="800" height="600"></canvas>
+
+  <script>
+    var canvas = new fabric.Canvas('c');
+
+    // 创建一个 IText 对象
+    var iText = new fabric.TextBox('Hello 😀 Fabric.js! 你好，Fabric.js！', {
+      left: 50,
+      top: 50,
+      fontSize: 30,
+      fill: 'black',
+      splitByGrapheme: true // 使用字形拆分文本
+    });
+
+    // 添加 IText 对象到画布
+    canvas.add(iText);
+
+    // 渲染画布
+    canvas.renderAll();
+  </script>
+</body>
+</html>

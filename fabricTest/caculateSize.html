@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabric.js Transform Matrix Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
+</head>
+<body>
+    <canvas id="c" width="800" height="600" style="border: 1px solid #ccc"></canvas>
+    <script>
+        const canvas = new fabric.Canvas('c');
+
+        fabric.Image.fromURL('https://craftypixels.com/placeholder-image/800x800/bd0000/000000&text=800', function(img) {
+            // 设置图像初始变换
+            img.set({
+                left: 100,
+                top: 100,
+                scaleX: 2,
+                scaleY: 2,
+            });
+
+            window.img = img;
+            canvas.add(img);
+            canvas.renderAll();
+
+            // 计算变换矩阵
+            const matrix = img.calcTransformMatrix();
+            console.log('Transform Matrix:', matrix);
+
+            // 获取边界矩形
+            const boundingRect = img.getBoundingRect();
+            console.log('Bounding Rect:', boundingRect);
+
+            // 将边界矩形的四个角应用逆变换矩阵以获取实际尺寸
+            const points = [
+                new fabric.Point(boundingRect.left, boundingRect.top),
+                new fabric.Point(boundingRect.left + boundingRect.width, boundingRect.top),
+                new fabric.Point(boundingRect.left + boundingRect.width, boundingRect.top + boundingRect.height),
+                new fabric.Point(boundingRect.left, boundingRect.top + boundingRect.height)
+            ];
+
+            const inverseMatrix = fabric.util.invertTransform(matrix);
+
+            const actualPoints = points.map(point => {
+                return fabric.util.transformPoint(point, inverseMatrix);
+            });
+
+            const actualWidth = actualPoints[1].x - actualPoints[0].x;
+            const actualHeight = actualPoints[3].y - actualPoints[0].y;
+
+            console.log('Actual Width:', actualWidth);
+            console.log('Actual Height:', actualHeight);
+        });
+    </script>
+</body>
+</html>
