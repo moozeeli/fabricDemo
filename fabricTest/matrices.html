@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fabric.js Drag Container Example</title>
+    <script src="./assets/fabric.js"></script>
+  </head>
+  <body>
+    <canvas
+      id="c"
+      width="800"
+      height="600"
+      style="border: 1px solid #ccc"
+    ></canvas>
+    <script>
+
+    const canvas = new fabric.Canvas('c');
+
+    // 创建一个矩形对象
+    const rect = new fabric.Rect({
+        left: 0,
+        top: 0,
+        width: 100,
+        height: 100,
+        fill: 'red',
+    });
+
+    window.rect = rect;
+    // 创建一个 Group
+    const group = new fabric.Group([rect], {
+        left: 0,
+        top: 0,
+        angle: 0, // 初始角度
+        scaleX: 1,
+        scaleY: 1
+    });
+    window.group = group
+
+    // 在 Group 变换之前保存对象的变换矩阵
+    group.on('scaling', function() {
+        // 逆矩阵用于抵消 Group 的变换
+        const inverseGroupMatrix = fabric.util.invertTransform(group.calcTransformMatrix());
+        console.log('inverseGroupMatrix',inverseGroupMatrix);
+        
+        // 保存对象当前的矩阵
+        rect.transformMatrix = fabric.util.multiplyTransformMatrices(
+            inverseGroupMatrix, 
+            rect.calcTransformMatrix()
+        );
+
+        canvas.requestRenderAll();
+    });
+
+    // 添加 Group 到 canvas
+    canvas.add(group);
+    </script>
+
+</body>
