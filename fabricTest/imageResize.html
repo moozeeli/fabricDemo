@@ -17,23 +17,6 @@
       const canvas = new fabric.Canvas("c",{
         uniformScaling:false
       });
-      // fabric.Object.prototype.originX = "center";
-      // fabric.Object.prototype.originY = "center";
-
-      // 定位框
-      canvas.add(new fabric.Rect({
-        left: 300,
-        top: 300,
-        width: 300,
-        height: 300,
-        fill: "rgba(0,0,0,0)", // 透明背景
-        stroke: "gray", // 边框颜色
-        strokeWidth: 1,
-        lockUniScaling: false,
-        lockScalingFlip: true,
-        selectable:false,
-
-      }));
 
 
 
@@ -44,12 +27,12 @@
         width: 300,
         height: 100,
         fill: "rgba(0,0,0,0)", // 透明背景
-        stroke: "blue", // 边框颜色
-        borderColor:"blue",
+        // stroke: "blue", // 边框颜色
+        // borderColor:"blue",
         strokeWidth: 1,
-        lockUniScaling: false,
+        // lockUniScaling: false,
         lockScalingFlip: true,
-        strokeUniform: true,
+        // strokeUniform: true,
 
         // objectCaching: false,
       });
@@ -60,41 +43,13 @@
 
 
 
-      fabric.Image.fromURL(
-        "https://craftypixels.com/placeholder-image/400x400/bdbd00/000000&text=400",
-        function (img400) {
-          img400.set({
-            left: 0,
-            top: 0,
-            // left:container.left - (img400.width*rate)/2,
-            // top:container.top  - (img400.height*rate)/2,
-            // height:container.height,
-            // width:container.width,
-            // originX: 'center',
-            // originY: 'center',
-            // scaleX: rate,
-            // scaleY: rate,
-            // width:container.width,
-            // height:container.height,
-          });
-          // 添加图像和容器到画布
-          window.img400 = img400;
-          canvas.add(img400);
-
-          canvas.requestRenderAll();
-        }
-      );
-
-
-
-
       const container = new fabric.Group([frameRect],{
         originX: 'center',
         originY: 'center',
+        lockScalingFlip: true,
         // selectable:false,
-        borderColor:"red",
+        borderColor:"blue",
         // evented:false,
-        subTargetCheck:true,
       });
       
       canvas.add(container);
@@ -102,24 +57,18 @@
       
       // 创建图像
       fabric.Image.fromURL(
-        "https://craftypixels.com/placeholder-image/800x800/bd0000/000000&text=800",
+        "https://img.staticdj.com/oss/operation/f2303614106bd788c18935b779e4bdc6.jpg",
         function (img800) {
           let rate1  = container.height / img800.height ;
           let rate2 = container.width / img800.width;
           let rate = rate1 < rate2 ? rate1 : rate2;
           img800.set({
-            left: container.left,
-            top: container.top,
-            // left:container.left - (img800.width*rate)/2,
-            // top:container.top  - (img800.height*rate)/2,
-            // height:container.height,
-            // width:container.width,
             originX: 'center',
             originY: 'center',
+            left: container.left,
+            top: container.top,
             scaleX: rate,
             scaleY: rate,
-            width: img800.width,
-            height: img800.height,
           });
 
         
@@ -133,26 +82,15 @@
 
         // "mousedown",
         container.on("scaling", (e) => {
-          console.log("scaling e ",e,)
-          // let rate1  = container.getBoundingRect().height / img800.height ;
-          // let rate2 = container.getBoundingRect().width / img800.width;
-          let rate1 = container.scaleX * img800.scaleX;
-          let rate2  = container.scaleY * img800.scaleY;
-          
+          // console.log("scaling e ",e,)
           // 逆矩阵
           const inverseGroupMatrix = fabric.util.invertTransform(container.calcTransformMatrix());
-          console.log("rate1*inverseGroupMatrix[0]",rate1*inverseGroupMatrix[0])
-          console.log("img800.getBoundingRect(true,true).height",img800.getBoundingRect(true,true).height)
+          let rate1 = container.width*container.scaleX / img800.width ;
+          let rate2  = container.height*container.scaleY / img800.height;
           let rate = rate1 < rate2 ? rate1 : rate2;
-          console.log('rate',rate1,rate2,inverseGroupMatrix)
           img800.set({
-            
-            scaleX: rate1*inverseGroupMatrix[0],
-            scaleY: rate2*inverseGroupMatrix[3],
-            // scaleY: rate,
-            // scaleY: rate1,
-            // scaleX: rate,
-            // scaleY: rate2,
+            scaleX: rate * inverseGroupMatrix[0],
+            scaleY: rate * inverseGroupMatrix[3],
           });
           canvas.renderAll();
         });
