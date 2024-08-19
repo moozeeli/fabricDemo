@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fabric.js Drag Container Example</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.js"></script>
+    <script src="./assets/fabric.5.4.0.js"></script>
   </head>
   <body>
     <canvas
@@ -15,7 +15,7 @@
     ></canvas>
     <script >
       const canvas = new fabric.Canvas("c",{
-        uniformScaling:false
+        // uniformScaling:false
       });
 
 
@@ -27,6 +27,7 @@
         width: 300,
         height: 100,
         fill: "rgba(0,0,0,0)", // 透明背景
+        // uniformScaling:false,
         // stroke: "blue", // 边框颜色
         // borderColor:"blue",
         strokeWidth: 1,
@@ -48,6 +49,7 @@
         originY: 'center',
         lockScalingFlip: true,
         // selectable:false,
+        uniformScaling:false,
         borderColor:"blue",
         // evented:false,
       });
@@ -63,6 +65,7 @@
           let rate2 = container.width / img800.width;
           let rate = rate1 < rate2 ? rate1 : rate2;
           img800.set({
+            // uniformScaling:false,
             originX: 'center',
             originY: 'center',
             left: container.left,
@@ -75,6 +78,32 @@
           // 添加图像和容器到画布
           container.addWithUpdate(img800);
           window.img800 = img800;
+
+          canvas.requestRenderAll();
+        }
+      );
+
+      // 创建图像
+      fabric.Image.fromURL(
+        "https://img.staticdj.com/oss/operation/f2303614106bd788c18935b779e4bdc6.jpg",
+        function (img800) {
+          let rate1  = container.height / img800.height ;
+          let rate2 = container.width / img800.width;
+          let rate = rate1 < rate2 ? rate1 : rate2;
+          img800.set({
+            // uniformScaling:false,
+            originX: 'center',
+            originY: 'center',
+            left: container.left,
+            top: container.top,
+            scaleX: rate,
+            scaleY: rate,
+          });
+
+        
+          // 添加图像和容器到画布
+          canvas.add(img800);
+          // window.img800 = img800;
 
           canvas.requestRenderAll();
         }

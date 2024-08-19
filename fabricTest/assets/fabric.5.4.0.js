@@ -6858,8 +6858,13 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
   function scaleIsProportional(eventData, fabricObject) {
     var canvas = fabricObject.canvas, uniScaleKey = canvas.uniScaleKey,
         uniformIsToggled = eventData[uniScaleKey];
-    return (canvas.uniformScaling && !uniformIsToggled) ||
+    if(fabricObject.uniformScaling===false){
+      return fabricObject.uniformScaling;
+    }else{
+      return (canvas.uniformScaling && !uniformIsToggled) ||
     (!canvas.uniformScaling && uniformIsToggled);
+    }
+    
   }
 
   /**
